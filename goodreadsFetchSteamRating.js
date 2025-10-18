@@ -43,7 +43,7 @@
         return { title, author };
     }
 
-    function displaySteamRating(steamLevel) {
+    function displaySteamRating(steamLevel, bookUrl = null) {
         const existingDisplay = document.getElementById('romance-io-steam-rating');
         if (existingDisplay) {
             existingDisplay.remove();
@@ -67,10 +67,22 @@
             border: 2px solid #ff5252;
         `;
 
+        let linkHtml = '';
+        if (bookUrl) {
+            linkHtml = `
+                <div style="font-size: 12px; margin-top: 8px;">
+                    <a href="${bookUrl}" target="_blank"
+                      style="color: #fff; text-decoration: underline; font-weight: bold;"
+                      onclick="event.stopPropagation();">
+                      📖 View on Romance.io
+                    </a>
+                </div>
+            `;
+        }
         display.innerHTML = `
             <div style="font-weight: bold; margin-bottom: 8px; font-size: 16px;">🔥 Rating</div>
             <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">${steamLevel}</div>
-            <div style="font-size: 12px; opacity: 0.9;">From Romance.io</div>
+            ${linkHtml}
         `;
 
         document.body.appendChild(display);
@@ -236,7 +248,7 @@
 
                     const steamRating = extractSteamRating(doc);
                     if (steamRating) {
-                        displaySteamRating(steamRating);
+                        displaySteamRating(steamRating, bookUrl);
                     } else {
                         displaySteamRating('Steam rating not found');
                         console.log('Could not find steam rating on book page');
